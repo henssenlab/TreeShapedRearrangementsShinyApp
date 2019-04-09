@@ -1,3 +1,5 @@
+The app is hosted on [https://kons.shinyapps.io/trees/](https://kons.shinyapps.io/trees/).
+
 Requirements: 
 - R 3.5.1
 - shiny 1.2.0 
