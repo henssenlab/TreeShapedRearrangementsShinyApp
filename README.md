@@ -8,6 +8,7 @@ Requirements:
 - dplyr 0.8.0.1
 - tidyr 0.8.3
 - circlize 0.4.5
+- DT 0.5
 
 To download and run locally:
 ```
