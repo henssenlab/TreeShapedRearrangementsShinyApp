@@ -1,4 +1,4 @@
-The app is hosted on [https://kons.shinyapps.io/trees/](https://kons.shinyapps.io/trees/).
+You can explore own data and the data from the paper at [https://kons.shinyapps.io/trees/](https://kons.shinyapps.io/trees/). 
 
 Requirements: 
 - R 3.5.1
@@ -15,3 +15,6 @@ git clone https://github.com/henssenlab/TreeShapedRearrangementsShinyApp.git
 cd TreeShapedRearrangementsShinyApp
 Rscript -e 'shiny::runApp("app.R", launch.browser=TRUE)'
 ```
+
+Contact:
+henssenlab@gmail.com
