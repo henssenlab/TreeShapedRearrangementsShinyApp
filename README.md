@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/180385829.svg)](https://zenodo.org/badge/latestdoi/180385829)
+
 You can explore own data and the data from the paper at [https://kons.shinyapps.io/trees/](https://kons.shinyapps.io/trees/). 
 
 Requirements: 
