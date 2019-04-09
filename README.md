@@ -1,6 +1,3 @@
-This provides the code for a Shiny App that visualizes the data from Koche R., Fos E. and Helmsauer K., et al. (under review). 
-The app is hosted on [https://kons.shinyapps.io/trees/](https://kons.shinyapps.io/trees/).
-
 Requirements: 
 - R 3.5.1
 - shiny 1.2.0 
