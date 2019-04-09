@@ -16,6 +16,4 @@ cd TreeShapedRearrangementsShinyApp
 Rscript -e 'shiny::runApp("app.R", launch.browser=TRUE)'
 ```
 
-Contact:
-
-henssenlab@gmail.com
+Contact: henssenlab@gmail.com
