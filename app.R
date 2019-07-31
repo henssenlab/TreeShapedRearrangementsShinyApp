@@ -11,7 +11,7 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(circlize)
-source("utils/helpers.R")
+source("helpers.R")
 library(DT)
 
 # Define UI for application that draws a histogram
@@ -23,7 +23,7 @@ ui <- fluidPage(
       
       radioButtons("dataset", 
                    label = "Dataset",
-                   choices = list("Peifer et al. (2015)" = "peifer", "DKFZ Pediatric Pan Cancer Dataset" = "pedpancan", "Upload your own data" = "upload"), 
+                   choices = list("Peifer et al. (2015)" = "peifer", "Berlin Cohort" = "berlin", "DKFZ Pediatric Pan Cancer Dataset" = "pedpancan", "Upload your own data" = "upload"), 
                    selected = "peifer"),
       
       conditionalPanel(
@@ -46,6 +46,15 @@ ui <- fluidPage(
       
       conditionalPanel(
         condition = "input.dataset == 'peifer'",
+        selectizeInput(
+          "svcaller", "Structural Variant Call Set",
+          choices = c("Delly", "Smufin", "Novobreak", "Svaba", "Brass", "Union", "AtLeastTwo"),
+          selected = "Union"
+        )
+      ),
+      
+      conditionalPanel(
+        condition = "input.dataset == 'berlin'",
         selectizeInput(
           "svcaller", "Structural Variant Call Set",
           choices = c("Delly", "Smufin", "Novobreak", "Svaba", "Brass", "Union", "AtLeastTwo"),
@@ -103,17 +112,19 @@ ui <- fluidPage(
   ),
   hr(),
   p(
-    "Code is available at ", a("github.com/henssenlab/", href="https://www.github.com/henssenlab/"), 
-    br(),
-    "Contact: ", a("henssenlab@gmail.com", href="mailto:henssenlab@gmail.com")
-    )
+  "DOI ", a("10.5281/zenodo.2634261", href="https://zenodo.org/badge/latestdoi/180385829"),
+  br(),
+  "Code is available at ", a("github.com/henssenlab/TreeShapedRearrangementsShinyApp", href="https://www.github.com/henssenlab/TreeShapedRearrangementsShinyApp"),
+  br(),
+  "Contact: ", a("henssenlab@gmail.com", href="mailto:henssenlab@gmail.com")
+)
 )
 
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  pedpancan_meta = read.table("data/PedPanCanMeta.csv", sep=";", header=T) %>% 
+  pedpancan_meta = read.table("PedPanCanMeta.csv", sep=";", header=T) %>% 
     filter(seq_type == "wgs")
   entity_names = pedpancan_meta$entity %>% as.character() %>% unique()
   
@@ -136,12 +147,18 @@ server <- function(input, output, session) {
     }
     if (input$dataset == "pedpancan"){
       if (is.null(input$entity)) return(NULL)
-      data = read.table("data/pedpancan_wgs_txcalls.tsv", header = TRUE, sep="\t") %>%
+      data = read.table("pedpancan_wgs_txcalls.tsv", header = TRUE, sep="\t") %>%
         filter(Sample %in% (pedpancan_meta %>% filter(entity == input$entity) %>% .$sample %>% unique()))
     }
     if (input$dataset == "peifer"){
       if (is.null(input$svcaller)) return(NULL)
-      data = read.table("data/peifer_tx.tsv", header = TRUE, sep="\t") %>%
+      data = read.table("peifer_tx.tsv", header = TRUE, sep="\t") %>%
+        filter(SVCaller == input$svcaller) %>%
+        dplyr::select(Sample, ChrA, PosA, ChrB, PosB)
+    }
+    if (input$dataset == "berlin"){
+      if (is.null(input$svcaller)) return(NULL)
+      data = read.table("berlin_tx.tsv", header = TRUE, sep="\t") %>%
         filter(SVCaller == input$svcaller) %>%
         dplyr::select(Sample, ChrA, PosA, ChrB, PosB)
     }
@@ -213,7 +230,7 @@ server <- function(input, output, session) {
   })
   
   output$circoswelcome <- renderImage({
-    filename <- normalizePath("./utils/NB2013UnionPalmTreeCircosRed.png")
+    filename <- normalizePath("./NB2013UnionPalmTreeCircosRed.png")
 
     # Return a list containing the filename and alt text
     list(src = filename,
