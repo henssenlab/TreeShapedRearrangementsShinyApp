@@ -26,6 +26,9 @@ ui <- fluidPage(
                    choices = list("Peifer et al. (2015)" = "peifer", "Berlin Cohort" = "berlin", "DKFZ Pediatric Pan Cancer Dataset" = "pedpancan", "Upload your own data" = "upload"), 
                    selected = "peifer"),
       
+      sliderInput("slider_threshold", label = "Cluster Threshold (default: 3)", min = 2, 
+                  max = 9, value = 3),
+      
       conditionalPanel(
         condition = "input.dataset == 'upload'",
         p("Please upload a tab-separated text file that specifies the interchromosomal rearrangements in your dataset. Columns should be named Sample, ChrA, PosA, ChrB and PosB. Chromsome names should contain the chr-prefix."),
@@ -124,8 +127,8 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  pedpancan_meta = read.table("PedPanCanMeta.csv", sep=";", header=T) %>% 
-    filter(seq_type == "wgs")
+  pedpancan_meta = read.delim("PedPanCanMeta.csv", sep=";", header=T) %>% 
+    filter(seq_type == "wgs") %>% mutate(entity = entity_long)
   entity_names = pedpancan_meta$entity %>% as.character() %>% unique()
   
   observe({
@@ -190,8 +193,9 @@ server <- function(input, output, session) {
   
   palmtrees = reactive({
     t = tx()
+    k = input$slider_threshold
     if (is.null(t)) return(NULL)
-    pt = helpers_callPalmTrees(t)
+    pt = helpers_callPalmTrees(t, k)
     return(pt)
   })
   

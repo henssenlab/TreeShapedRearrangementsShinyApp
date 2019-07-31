@@ -2,9 +2,10 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(circlize)
-source("utils/ParseSVCallerData.R")
-source("utils/almost_duplicate_breakpoints.R")
-source("utils/call_high_density_region.R")
+source("ParseSVCallerData.R")
+source("almost_duplicate_breakpoints.R")
+source("call_high_density_region.R")
+
 
 createUCSCLinkFromRegion <- function(chr, start, end){
   sprintf(paste0("<a href='http://genome.ucsc.edu/cgi-bin/hgTracks?org=hg19&db=hg19&position=",
@@ -16,7 +17,7 @@ createUCSCLinkFromRegion <- function(chr, start, end){
          "' target='_blank'>UCSC Browser</a>"))
 }
 
-helpers_callPalmTrees = function(tx){
+helpers_callPalmTrees = function(tx, k_threshold){
   
   #tx = read.table("~/Desktop/PalmTrees/Analysis/Shiny/AllSmufinCalls.tsv", sep="\t", header=T) %>% filter(Sample == "NB2013")
   #tx = read.table("~/Desktop/PalmTrees/Analysis/Shiny/PalmTrees/pedpancan_wgs_txcalls.tsv", sep="\t", header=T) %>% filter(Sample == "icgc_mb272")
@@ -93,7 +94,7 @@ helpers_callPalmTrees = function(tx){
   
   windowlength = 4000000
   resol = 25000
-  threshold = 3
+  threshold = k_threshold
   
   palmtrees = data.frame(IntervalID=character(), Cohort=character(), SVCaller=character, Sample=character(), Chr=character(), Start=double(), End=double(), PalmTreeID=character())
   samples = unique(txdouble$Sample)
