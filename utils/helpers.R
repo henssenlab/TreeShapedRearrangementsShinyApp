@@ -2,9 +2,9 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(circlize)
-source("ParseSVCallerData.R")
-source("almost_duplicate_breakpoints.R")
-source("call_high_density_region.R")
+source("utils/ParseSVCallerData.R")
+source("utils/almost_duplicate_breakpoints.R")
+source("utils/call_high_density_region.R")
 
 
 createUCSCLinkFromRegion <- function(chr, start, end){

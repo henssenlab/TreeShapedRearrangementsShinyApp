@@ -11,7 +11,7 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(circlize)
-source("helpers.R")
+source("utils/helpers.R")
 library(DT)
 
 # Define UI for application that draws a histogram
@@ -118,7 +118,7 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  pedpancan_meta = read.delim("PedPanCanMeta.csv", sep=";", header=T) %>% 
+  pedpancan_meta = read.delim("data/PedPanCanMeta.csv", sep=";", header=T) %>% 
     filter(seq_type == "wgs") %>% mutate(entity = entity_long)
   entity_names = pedpancan_meta$entity %>% as.character() %>% unique()
   
@@ -141,12 +141,12 @@ server <- function(input, output, session) {
     }
     if (input$dataset == "pedpancan"){
       if (is.null(input$entity)) return(NULL)
-      data = read.table("pedpancan_wgs_txcalls.tsv", header = TRUE, sep="\t") %>%
+      data = read.table("data/pedpancan_wgs_txcalls.tsv", header = TRUE, sep="\t") %>%
         filter(Sample %in% (pedpancan_meta %>% filter(entity == input$entity) %>% .$sample %>% unique()))
     }
     if (input$dataset == "peifer"){
       if (is.null(input$svcaller)) return(NULL)
-      data = read.table("peifer_tx.tsv", header = TRUE, sep="\t") %>%
+      data = read.table("data/peifer_tx.tsv", header = TRUE, sep="\t") %>%
         filter(SVCaller == input$svcaller) %>%
         dplyr::select(Sample, ChrA, PosA, ChrB, PosB)
     }
@@ -219,7 +219,7 @@ server <- function(input, output, session) {
   })
   
   output$circoswelcome <- renderImage({
-    filename <- normalizePath("./NB2013UnionPalmTreeCircosRed.png")
+    filename <- normalizePath("./utils/NB2013UnionPalmTreeCircosRed.png")
 
     # Return a list containing the filename and alt text
     list(src = filename,
