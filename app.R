@@ -23,7 +23,7 @@ ui <- fluidPage(
       
       radioButtons("dataset", 
                    label = "Dataset",
-                   choices = list("Peifer et al. (2015)" = "peifer", "Berlin Cohort" = "berlin", "DKFZ Pediatric Pan Cancer Dataset" = "pedpancan", "Upload your own data" = "upload"), 
+                   choices = list("Peifer et al. (2015)" = "peifer", "DKFZ Pediatric Pan Cancer Dataset" = "pedpancan", "Upload your own data" = "upload"), 
                    selected = "peifer"),
       
       sliderInput("slider_threshold", label = "Cluster Threshold (default: 3)", min = 2, 
@@ -49,15 +49,6 @@ ui <- fluidPage(
       
       conditionalPanel(
         condition = "input.dataset == 'peifer'",
-        selectizeInput(
-          "svcaller", "Structural Variant Call Set",
-          choices = c("Delly", "Smufin", "Novobreak", "Svaba", "Brass", "Union", "AtLeastTwo"),
-          selected = "Union"
-        )
-      ),
-      
-      conditionalPanel(
-        condition = "input.dataset == 'berlin'",
         selectizeInput(
           "svcaller", "Structural Variant Call Set",
           choices = c("Delly", "Smufin", "Novobreak", "Svaba", "Brass", "Union", "AtLeastTwo"),
@@ -156,12 +147,6 @@ server <- function(input, output, session) {
     if (input$dataset == "peifer"){
       if (is.null(input$svcaller)) return(NULL)
       data = read.table("peifer_tx.tsv", header = TRUE, sep="\t") %>%
-        filter(SVCaller == input$svcaller) %>%
-        dplyr::select(Sample, ChrA, PosA, ChrB, PosB)
-    }
-    if (input$dataset == "berlin"){
-      if (is.null(input$svcaller)) return(NULL)
-      data = read.table("berlin_tx.tsv", header = TRUE, sep="\t") %>%
         filter(SVCaller == input$svcaller) %>%
         dplyr::select(Sample, ChrA, PosA, ChrB, PosB)
     }
